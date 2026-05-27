@@ -111,6 +111,41 @@ same Postgres database. One dedicated `worker` dyno costs about $7/mo on
 Heroku, $2-3 on Fly. Solid Queue's process supervisor is plenty for
 hundreds of webhook events/minute.
 
+**Twilio as the WhatsApp BSP, not Meta Cloud API direct.** Meta offers
+direct WhatsApp Business Platform access at noticeably lower per-message
+prices (roughly half of what Twilio passes through). For a project this
+size, going through Twilio is still the right call:
+
+- **Day-zero sandbox.** Twilio gives you a working test environment in
+  about 30 seconds (text "join &lt;code&gt;" to a sandbox number from your
+  phone, done). Going Direct, you can't send a single test message until
+  Meta has verified your business, approved your phone number, and
+  reviewed your initial templates. That's days to weeks of paperwork
+  before you can write the first line of webhook code.
+- **Mature SDK.** The `twilio-ruby` gem has battle-tested signature
+  validation (`Twilio::Security::RequestValidator`), idempotent
+  message-send helpers, and consistent payload shapes across SMS,
+  WhatsApp, and Voice. Meta's official Ruby support is sparse; you'd
+  hand-roll HMAC signature checks and parse the WhatsApp webhook
+  envelope yourself.
+- **Multi-channel future.** If this project ever routes Instagram DM,
+  Facebook Messenger, SMS, or RCS, Twilio handles all of them with the
+  same webhook + sender abstraction. The Platform widget in the admin UI
+  hints at this. Going Direct means a separate integration per channel.
+- **Migration is well-trodden when economics demand it.** The webhook
+  payload, the signature-validation pattern, the outbound shape: all are
+  similar enough that swapping `Webhooks::TwilioController` for a
+  `Webhooks::MetaController` is a few days of work, not a rewrite. So
+  the right time to migrate is when monthly Twilio markup actually
+  hurts (typically thousands of dollars/month of WhatsApp spend), not
+  before.
+
+In short: Twilio buys speed-to-market and developer ergonomics at a
+predictable per-message premium. For a single-business chatbot doing
+even a few thousand conversations a month, the premium is small. For a
+multi-tenant SaaS doing hundreds of thousands of conversations, the
+math flips and Direct becomes the right destination.
+
 **Namespaced models.** `Intake::Conversation`, not `Conversation`. The
 same codebase might later host a customer-to-staff messaging system
 (which is what the parent app does), so naming the WhatsApp domain
