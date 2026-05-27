@@ -9,9 +9,10 @@ Twilio. Extracted and generalized from a working production app.
 
 ## Why this exists
 
-Service businesses (matchmakers, consultants, real-estate agents, lawyers,
-fitness studios) get a lot of their leads via WhatsApp DMs and spend hours
-a day on triage. This project does that triage automatically:
+Many service businesses (matchmakers, consultants, real-estate agents,
+lawyers, fitness studios) get a meaningful share of their leads via
+WhatsApp DMs and spend hours a day on triage. This project does that
+triage automatically:
 
 - Inbound WhatsApp message goes to a Twilio webhook, which enqueues a
   Solid Queue job
@@ -74,13 +75,13 @@ a day on triage. This project does that triage automatically:
 | `IntakeOrchestrator` | Mode routing plus the call/persist/send sequence. Rescues AI failures with a configurable fallback message. |
 | `SystemPromptBuilder` | Interpolates `ChatbotConfig` into a system prompt template (skip-friendly, gender-inference instructions, services qualifier). |
 | `LeadExtractor` | Parses the `---INTAKE_COMPLETE---` marker block from the AI's reply, builds a `Lead`, strips the block before the message goes back to the user. |
-| `QuietHoursWindow` | Pure function returning true during the configured weekly pause window. Default is Friday 4pm through Saturday 9pm in the configured timezone. |
+| `QuietHoursWindow` | Pure function returning true during a weekly pause window. Default is Friday 4pm through Saturday 9pm; timezone is configurable. |
 
 ### Admin UI (`app/views/admin/intake/`)
 
 - **Conversations index.** Sortable, filterable, with Turbo-Frame
   typeahead search across phone / message text / lead name. Multi-channel
-  "Platform" widget hints at future channels (Instagram, SMS, etc).
+  "Platform" widget hints at future channels (Instagram, SMS, etc.).
 - **Conversation detail.** Tight CRM-style chat transcript (not a
   consumer messaging UI), live Turbo Streams broadcasts of new messages,
   Take Over / Release / Mark Complete / Mark Abandoned actions, inline
@@ -113,38 +114,41 @@ hundreds of webhook events/minute.
 
 **Twilio as the WhatsApp BSP, not Meta Cloud API direct.** Meta offers
 direct WhatsApp Business Platform access at noticeably lower per-message
-prices (roughly half of what Twilio passes through). For a project this
+prices. The exact ratio varies by region and conversation category;
+Twilio is the more expensive option at any volume. For a project this
 size, going through Twilio is still the right call:
 
 - **Day-zero sandbox.** Twilio gives you a working test environment in
   about 30 seconds (text "join &lt;code&gt;" to a sandbox number from your
-  phone, done). Going Direct, you can't send a single test message until
-  Meta has verified your business, approved your phone number, and
-  reviewed your initial templates. That's days to weeks of paperwork
-  before you can write the first line of webhook code.
+  phone, done). Meta direct can also be running in an afternoon using
+  their test phone number, but moving to a real production phone number
+  requires Meta business verification (days to weeks of paperwork) and
+  per-template approvals for any business-initiated messages. Twilio
+  abstracts most of that away.
 - **Mature SDK.** The `twilio-ruby` gem has battle-tested signature
   validation (`Twilio::Security::RequestValidator`), idempotent
   message-send helpers, and consistent payload shapes across SMS,
-  WhatsApp, and Voice. Meta's official Ruby support is sparse; you'd
-  hand-roll HMAC signature checks and parse the WhatsApp webhook
-  envelope yourself.
+  WhatsApp, and Voice. Meta does not ship an official Ruby SDK; you'd
+  hand-roll HMAC signature checks against their spec and parse the
+  WhatsApp webhook envelope yourself.
 - **Multi-channel future.** If this project ever routes Instagram DM,
   Facebook Messenger, SMS, or RCS, Twilio handles all of them with the
   same webhook + sender abstraction. The Platform widget in the admin UI
   hints at this. Going Direct means a separate integration per channel.
 - **Migration is well-trodden when economics demand it.** The webhook
-  payload, the signature-validation pattern, the outbound shape: all are
-  similar enough that swapping `Webhooks::TwilioController` for a
+  payload, the signature-validation pattern, the outbound shape: all
+  are similar enough that swapping `Webhooks::TwilioController` for a
   `Webhooks::MetaController` is a few days of work, not a rewrite. So
-  the right time to migrate is when monthly Twilio markup actually
-  hurts (typically thousands of dollars/month of WhatsApp spend), not
-  before.
+  the right time to migrate is when monthly Twilio spend consistently
+  exceeds a few hundred dollars, or when a multi-tenant pricing story
+  makes per-message margin matter.
 
 In short: Twilio buys speed-to-market and developer ergonomics at a
 predictable per-message premium. For a single-business chatbot doing
-even a few thousand conversations a month, the premium is small. For a
-multi-tenant SaaS doing hundreds of thousands of conversations, the
-math flips and Direct becomes the right destination.
+hundreds to a few thousand conversations a month, the premium is
+small relative to the engineering time saved. For a multi-tenant SaaS
+doing hundreds of thousands of conversations, the math flips and
+Direct becomes the right destination.
 
 **Namespaced models.** `Intake::Conversation`, not `Conversation`. The
 same codebase might later host a customer-to-staff messaging system
@@ -167,13 +171,13 @@ genuinely ambiguous names (Pat, Sam, Jordan).
 
 **Skip-friendly intake.** The welcome message tells the user upfront
 they can say "skip" to any question. The AI accepts skip/pass/next
-gracefully and records `[skipped]` in the structured block. Reduces
-drop-off mid-intake.
+gracefully and records `[skipped]` in the structured block. Designed
+to reduce drop-off mid-intake.
 
 **Services qualifier as a priority signal.** The intake asks early which
 service tier the lead wants (matchmaking, coaching, or database). A
 pink "Matchmaking · High Priority" pill in the admin makes the hottest
-leads scannable at a glance and eliminates triage overhead.
+leads scannable at a glance, cutting triage time.
 
 **Graceful AI failure.** When the Anthropic call raises (no credits,
 timeout, rate limit), the orchestrator catches it, logs the error class
@@ -219,6 +223,9 @@ email:    admin@example.com
 password: password123
 ```
 
+**Change this before exposing the app to anyone.** Edit
+`db/seeds.rb` or use the Devise password-reset flow.
+
 ## Tests
 
 ```sh
@@ -259,9 +266,10 @@ Optional: seed demo data so the admin pages look populated for visitors:
 fly ssh console -C "env ALLOW_DEMO_SEED=true bin/rails runner db/seeds/dev_demo.rb"
 ```
 
-Expected costs: about $5/mo idle (two tiny Fly machines plus Fly
-Postgres dev plan), peak about $20/mo with light Twilio + Anthropic
-usage assuming spend caps are set on both providers.
+Expected costs: about $8 to $10/mo idle (two `shared-cpu-1x / 512MB`
+machines always-on, plus Fly Postgres dev plan), peak about $25/mo
+with light Twilio + Anthropic usage assuming spend caps are set on
+both providers.
 
 ## Connecting WhatsApp
 
@@ -294,10 +302,10 @@ At about 50 intakes/day (typical small service business):
 | Provider | $/mo | Notes |
 |---|---|---|
 | Heroku (web + worker dyno, Basic) | $14 | Both 512 MB, never sleep |
-| Heroku Postgres (essential-0) | $5 | 1 GB cap, more than enough |
-| Twilio WhatsApp | ~$180 | About $0.01 per outbound message |
+| Heroku Postgres (essential-0) | $5 | 1 GB cap |
+| Twilio WhatsApp | $80 to $150 | Pricing is conversation + per-message; varies by region and category |
 | Anthropic Haiku | ~$30 | About $0.02 per complete intake |
-| **Total** | **~$230/mo** | For an AI bot handling 50 leads/day |
+| **Total** | **~$130 to $200/mo** | For an AI bot handling 50 leads/day |
 
 Cost optimization: when Anthropic spend gets meaningful, enable
 [prompt caching](https://docs.anthropic.com/en/docs/build-with-claude/prompt-caching)

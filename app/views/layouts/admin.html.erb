@@ -66,6 +66,49 @@
           </div>
         </details>
       </div>
+
+      <%# Mobile hamburger (below md) %>
+      <details class="md:hidden relative group" data-controller="dismissible-details" data-action="toggle->dismissible-details#enforceSingleOpen">
+        <summary class="cursor-pointer list-none p-1.5 -mr-1.5 text-gray-700 hover:text-gray-900 select-none">
+          <svg class="w-6 h-6 group-open:hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          <svg class="w-6 h-6 hidden group-open:block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </summary>
+
+        <div class="absolute right-0 top-full mt-2 w-72 bg-white border border-gray-200 rounded-lg shadow-xl z-20 py-2">
+          <div class="px-4 py-3 border-b border-gray-100 flex items-center gap-3">
+            <span class="w-9 h-9 rounded-full bg-pk/10 flex items-center justify-center flex-shrink-0">
+              <svg class="w-5 h-5 text-pk" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+              </svg>
+            </span>
+            <div class="flex-1 min-w-0">
+              <div class="text-xs text-gray-500">Signed in as</div>
+              <div class="text-sm font-medium text-gray-900 truncate"><%= current_user.email %></div>
+            </div>
+          </div>
+
+          <div class="py-1">
+            <a href="<%= admin_intake_conversations_path %>" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 no-underline">Conversations</a>
+            <a href="<%= admin_intake_leads_path %>" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 no-underline">Leads</a>
+            <a href="<%= admin_billing_index_path %>" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 no-underline">Billing</a>
+            <a href="<%= admin_email_lists_path %>" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 no-underline">Email Lists</a>
+          </div>
+
+          <div class="border-t border-gray-100 py-1">
+            <div class="px-4 pt-2 pb-1 text-[0.6rem] uppercase tracking-wider text-gray-400">Settings</div>
+            <a href="<%= edit_admin_intake_general_settings_path %>" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 no-underline">General</a>
+            <a href="<%= edit_admin_intake_quiet_hours_settings_path %>" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 no-underline">Quiet Hours</a>
+            <% if current_user.super_admin? %>
+              <a href="<%= edit_admin_intake_chatbot_config_path %>" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 no-underline">Chatbot Configuration <span class="text-[0.6rem] text-pk ml-1">SUPER</span></a>
+            <% end %>
+          </div>
+
+          <div class="border-t border-gray-100 py-1">
+            <a href="<%= edit_admin_user_settings_path %>" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 no-underline">User Settings</a>
+            <%= link_to "Log out", destroy_user_session_path, data: { turbo_method: :delete }, class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 no-underline" %>
+          </div>
+        </div>
+      </details>
     </nav>
 
     <% if notice.present? %>
