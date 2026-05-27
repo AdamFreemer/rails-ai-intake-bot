@@ -24,7 +24,7 @@ module Admin
         params.require(:config).permit(
           :brand_name, :brand_tagline, :bot_name,
           :welcome_message, :completion_message,
-          :paused_reply, :shabbat_reply,
+          :paused_reply, :quiet_hours_reply,
           :media_received_reply, :returning_user_reply,
           :error_fallback_reply,
           :custom_system_prompt_additions

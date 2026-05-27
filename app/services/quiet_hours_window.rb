@@ -1,4 +1,4 @@
-class ShabbatWindow
+class QuietHoursWindow
   # MVP: fixed Friday 4pm -> Saturday 9pm in the configured timezone.
   # Phase 3+ can swap in a zmanim API for sunset-accurate times.
   def self.active?(timezone)

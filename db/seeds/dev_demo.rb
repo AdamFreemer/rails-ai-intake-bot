@@ -207,7 +207,7 @@ multi_para_convo.messages.create!(role: "user",
 
     I'm 34, divorced two years ago after a 9-year marriage. No kids. I'm a
     therapist in private practice, work from home most days, very close with
-    my parents (we light Shabbat candles together every Friday).
+    my parents (we light Quiet Hours candles together every Friday).
 
     What I'm looking for is someone emotionally available. I've been on every
     app and the conversations are exhausting. A real conversation with

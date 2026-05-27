@@ -19,7 +19,7 @@
       emails_active   = admin_nav_active?(admin_email_lists_path)
       settings_active = admin_nav_active?(
         edit_admin_intake_general_settings_path,
-        edit_admin_intake_shabbat_settings_path,
+        edit_admin_intake_quiet_hours_settings_path,
         edit_admin_intake_chatbot_config_path
       )
     %>
@@ -42,7 +42,7 @@
           </summary>
           <div class="absolute right-0 mt-2 w-56 bg-white border border-gray-200 rounded-lg shadow-lg z-10 py-1">
             <a href="<%= edit_admin_intake_general_settings_path %>" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 no-underline">General</a>
-            <a href="<%= edit_admin_intake_shabbat_settings_path %>" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 no-underline">Shabbat Settings</a>
+            <a href="<%= edit_admin_intake_quiet_hours_settings_path %>" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 no-underline">Quiet Hours Settings</a>
             <% if current_user.super_admin? %>
               <a href="<%= edit_admin_intake_chatbot_config_path %>" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 no-underline">Chatbot Configuration <span class="text-[0.6rem] text-pk ml-1">SUPER</span></a>
             <% end %>

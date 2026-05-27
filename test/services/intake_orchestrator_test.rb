@@ -48,7 +48,7 @@ class IntakeOrchestratorTest < ActiveSupport::TestCase
   end
 
   test "paused mode (global): sends paused_reply, no Anthropic call" do
-    @settings.update!(global_mode: "paused", shabbat_mode_enabled: false)
+    @settings.update!(global_mode: "paused", quiet_hours_enabled: false)
 
     IntakeOrchestrator.new(@conversation).call
 
@@ -57,8 +57,8 @@ class IntakeOrchestratorTest < ActiveSupport::TestCase
       body: hash_including("Body" => @config.paused_reply)
   end
 
-  test "Shabbat window: sends shabbat_reply, no Anthropic call" do
-    @settings.update!(global_mode: "ai", shabbat_mode_enabled: true, shabbat_timezone: "America/New_York")
+  test "quiet hours window: sends quiet_hours_reply, no Anthropic call" do
+    @settings.update!(global_mode: "ai", quiet_hours_enabled: true, quiet_hours_timezone: "America/New_York")
 
     travel_to Time.find_zone("America/New_York").parse("2026-05-22 18:00:00") do
       IntakeOrchestrator.new(@conversation).call
@@ -66,7 +66,7 @@ class IntakeOrchestratorTest < ActiveSupport::TestCase
 
     assert_not_requested :post, "https://api.anthropic.com/v1/messages"
     assert_requested :post, %r{api\.twilio\.com},
-      body: hash_including("Body" => @config.shabbat_reply)
+      body: hash_including("Body" => @config.quiet_hours_reply)
   end
 
   test "human mode: stores nothing outbound, no Twilio call" do

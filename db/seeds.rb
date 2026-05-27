@@ -8,8 +8,8 @@ end
 
 Intake::AppSetting.first_or_create! do |s|
   s.global_mode = "ai"
-  s.shabbat_mode_enabled = false
-  s.shabbat_timezone = "America/New_York"
+  s.quiet_hours_enabled = false
+  s.quiet_hours_timezone = "America/New_York"
   s.currently_paused = false
   s.paused_auto_reply = "Thanks for reaching out! We're currently offline and will get back to you soon."
 end
@@ -25,7 +25,7 @@ Intake::ChatbotConfig.first_or_create! do |c|
   c.welcome_message = "Hi there! 👋 Welcome. I'd love to learn a little about you so we can connect you with the right person. Feel free to say \"skip\" to any question you'd rather not answer right now. Ready to get started?"
   c.completion_message = "Thank you so much for sharing! 🙏 Someone from our team will personally review your information and reach out shortly. Welcome aboard!"
   c.paused_reply = "Thanks for reaching out! We're currently offline and will get back to you soon."
-  c.shabbat_reply = "Thanks for reaching out! We're currently observing Shabbat and will be back Saturday evening."
+  c.quiet_hours_reply = "Thanks for reaching out! We're currently observing Quiet Hours and will be back Saturday evening."
   c.media_received_reply = "Thanks for that! For now I work best with text messages — could you type that out for me?"
   c.rate_limit_reply = "You're sending messages a bit fast! Give me a moment to catch up."
   c.error_fallback_reply = "Sorry, I'm having a brief technical hiccup right now. Please try sending your message again in a moment."

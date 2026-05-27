@@ -66,7 +66,7 @@ class CreateIntakeTables < ActiveRecord::Migration[8.1]
       t.jsonb :intake_questions, default: [], null: false
       t.jsonb :service_info, default: {}, null: false
       t.text :paused_reply
-      t.text :shabbat_reply
+      t.text :quiet_hours_reply
       t.text :returning_user_reply
       t.text :media_received_reply
       t.text :inappropriate_content_reply
@@ -82,8 +82,8 @@ class CreateIntakeTables < ActiveRecord::Migration[8.1]
 
     create_table :intake_app_settings do |t|
       t.string :global_mode, default: "ai", null: false
-      t.boolean :shabbat_mode_enabled, default: false, null: false
-      t.string :shabbat_timezone, default: "America/New_York", null: false
+      t.boolean :quiet_hours_enabled, default: false, null: false
+      t.string :quiet_hours_timezone, default: "America/New_York", null: false
       t.boolean :currently_paused, default: false, null: false
       t.text :paused_auto_reply
       t.timestamps

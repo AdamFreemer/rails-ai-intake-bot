@@ -1,6 +1,6 @@
 module Admin
   module Intake
-    class ShabbatSettingsController < ApplicationController
+    class QuietHoursSettingsController < ApplicationController
       before_action :authenticate_user!
       before_action :require_admin!
       layout "admin"
@@ -12,7 +12,7 @@ module Admin
       def update
         @setting = ::Intake::AppSetting.current
         if @setting.update(setting_params)
-          redirect_to edit_admin_intake_shabbat_settings_path, notice: "Shabbat settings updated."
+          redirect_to edit_admin_intake_quiet_hours_settings_path, notice: "Quiet Hours settings updated."
         else
           render :edit, status: :unprocessable_entity
         end
@@ -21,7 +21,7 @@ module Admin
       private
 
       def setting_params
-        params.require(:setting).permit(:shabbat_mode_enabled, :shabbat_timezone)
+        params.require(:setting).permit(:quiet_hours_enabled, :quiet_hours_timezone)
       end
     end
   end

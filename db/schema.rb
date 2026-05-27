@@ -19,8 +19,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_27_040438) do
     t.boolean "currently_paused", default: false, null: false
     t.string "global_mode", default: "ai", null: false
     t.text "paused_auto_reply"
-    t.boolean "shabbat_mode_enabled", default: false, null: false
-    t.string "shabbat_timezone", default: "America/New_York", null: false
+    t.boolean "quiet_hours_enabled", default: false, null: false
+    t.string "quiet_hours_timezone", default: "America/New_York", null: false
     t.datetime "updated_at", null: false
   end
 
@@ -40,11 +40,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_27_040438) do
     t.integer "max_messages_per_5_min", default: 20, null: false
     t.text "media_received_reply"
     t.text "paused_reply"
+    t.text "quiet_hours_reply"
     t.text "rate_limit_reply"
     t.text "returning_user_reply"
     t.boolean "send_followup_on_abandon", default: false, null: false
     t.jsonb "service_info", default: {}, null: false
-    t.text "shabbat_reply"
     t.datetime "updated_at", null: false
     t.text "welcome_message"
   end

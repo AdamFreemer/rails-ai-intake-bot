@@ -1,6 +1,6 @@
 class IntakeOrchestrator
   # Routes an inbound user message to the right handler based on global mode,
-  # Shabbat window, and per-conversation mode. Persists assistant replies and
+  # quiet hours window, and per-conversation mode. Persists assistant replies and
   # sends them out via Twilio. Returns the assistant message (if any).
   def initialize(conversation)
     @conversation = conversation
@@ -20,7 +20,7 @@ class IntakeOrchestrator
 
   def determine_mode
     return :paused if @settings.global_mode == "paused"
-    return :paused if @settings.shabbat_mode_enabled && ShabbatWindow.active?(@settings.shabbat_timezone)
+    return :paused if @settings.quiet_hours_enabled && QuietHoursWindow.active?(@settings.quiet_hours_timezone)
     return :human if @conversation.human_mode?
     :ai
   end
@@ -74,8 +74,8 @@ class IntakeOrchestrator
   end
 
   def paused_reply_text
-    if @settings.shabbat_mode_enabled && ShabbatWindow.active?(@settings.shabbat_timezone)
-      @config.shabbat_reply.presence || @settings.paused_auto_reply.presence || "We're currently offline for Shabbat."
+    if @settings.quiet_hours_enabled && QuietHoursWindow.active?(@settings.quiet_hours_timezone)
+      @config.quiet_hours_reply.presence || @settings.paused_auto_reply.presence || "We're currently offline for Quiet Hours."
     else
       @config.paused_reply.presence || @settings.paused_auto_reply.presence || "We're currently offline."
     end

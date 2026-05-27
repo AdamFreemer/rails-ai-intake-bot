@@ -1,6 +1,6 @@
 default:
   global_mode: ai
-  shabbat_mode_enabled: false
-  shabbat_timezone: America/New_York
+  quiet_hours_enabled: false
+  quiet_hours_timezone: America/New_York
   currently_paused: false
   paused_auto_reply: "We're currently offline."

@@ -18,7 +18,7 @@ Rails.application.routes.draw do
       end
       resources :leads, only: [ :index, :show, :edit, :update ]
       resource :general_settings, only: [ :edit, :update ]
-      resource :shabbat_settings, only: [ :edit, :update ]
+      resource :quiet_hours_settings, only: [ :edit, :update ]
       resource :chatbot_config, only: [ :edit, :update ]
     end
   end

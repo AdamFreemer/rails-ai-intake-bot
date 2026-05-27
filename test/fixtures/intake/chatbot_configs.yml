@@ -6,7 +6,7 @@ default:
   welcome_message: "Hi there! 💕 Welcome to AcmeBot."
   completion_message: "Thank you so much for sharing! 💕"
   paused_reply: "We're currently offline. Back soon!"
-  shabbat_reply: "Shabbat Shalom! 🕯️ We'll be back Saturday evening."
+  quiet_hours_reply: "Quiet Hours Shalom! 🕯️ We'll be back Saturday evening."
   media_received_reply: "I work best with text — could you type that out?"
   rate_limit_reply: "Whoa, slow down a sec! 😊"
   intake_questions: []
