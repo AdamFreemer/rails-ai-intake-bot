@@ -1,0 +1,30 @@
+# Fixtures loaded as Intake::Conversation (see test_helper.rb)
+
+active_new:
+  whatsapp_number: "+15551234567"
+  channel: whatsapp
+  mode: ai
+  status: active
+  intake_complete: false
+  extracted_data: {}
+  last_message_at: 2026-05-22 10:00:00
+
+active_human:
+  whatsapp_number: "+15559876543"
+  channel: whatsapp
+  mode: human
+  status: active
+  intake_complete: false
+  extracted_data: {}
+  last_message_at: 2026-05-22 11:00:00
+
+completed:
+  whatsapp_number: "+15555550100"
+  channel: whatsapp
+  mode: ai
+  status: completed
+  intake_complete: true
+  extracted_data:
+    FIRST_NAME: Sarah
+    AGE: "28"
+  last_message_at: 2026-05-22 12:00:00

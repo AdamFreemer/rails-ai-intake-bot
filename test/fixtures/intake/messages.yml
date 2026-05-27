@@ -1,0 +1,12 @@
+user_hi:
+  intake_conversation_id: <%= ActiveRecord::FixtureSet.identify(:active_new) %>
+  role: user
+  content: Hi!
+  message_type: text
+  whatsapp_message_id: SM0000000001
+
+assistant_welcome:
+  intake_conversation_id: <%= ActiveRecord::FixtureSet.identify(:active_new) %>
+  role: assistant
+  content: "Welcome to AcmeBot! 💕 What's your name?"
+  message_type: text

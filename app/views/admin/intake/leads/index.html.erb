@@ -1,0 +1,54 @@
+<div class="flex items-center justify-between mb-8">
+  <h1 class="font-serif text-2xl">Leads</h1>
+  <span class="text-xs text-gray-500"><%= @leads.size %> total</span>
+</div>
+
+<%= form_with url: admin_intake_leads_path, method: :get, local: true, class: "flex flex-wrap items-end gap-3 mb-6" do |f| %>
+  <div class="flex flex-col">
+    <label class="text-[0.65rem] uppercase tracking-wider text-gray-500 mb-1">Search</label>
+    <%= f.text_field :q, value: params[:q], placeholder: "Name, about, looking for…", class: "border border-gray-300 rounded-lg px-3 py-1.5 text-sm w-72" %>
+  </div>
+  <div class="flex flex-col">
+    <label class="text-[0.65rem] uppercase tracking-wider text-gray-500 mb-1">Status</label>
+    <%= f.select :status, options_for_select([ [ "All", "" ] ] + Intake::Lead::STATUSES.map { |s| [ s.titleize, s ] }, params[:status]), {}, class: "border border-gray-300 rounded-lg px-3 py-1.5 text-sm" %>
+  </div>
+  <%= f.submit "Filter", class: "px-4 py-2 bg-pk text-white rounded-lg text-xs hover:bg-pk-dk transition-colors cursor-pointer border-none" %>
+  <% if params[:q].present? || params[:status].present? %>
+    <%= link_to "Reset", admin_intake_leads_path, class: "text-xs text-gray-500 hover:text-gray-700 no-underline self-center" %>
+  <% end %>
+<% end %>
+
+<% if @leads.any? %>
+  <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
+    <table class="w-full text-sm">
+      <thead class="bg-gray-50 text-[0.65rem] uppercase tracking-wider text-gray-500">
+        <tr>
+          <th class="text-left px-6 py-3">Name</th>
+          <th class="text-left px-6 py-3">Age</th>
+          <th class="text-left px-6 py-3">Gender</th>
+          <th class="text-left px-6 py-3">Location</th>
+          <th class="text-left px-6 py-3">Religiosity</th>
+          <th class="text-left px-6 py-3">Status</th>
+          <th class="text-left px-6 py-3">Created</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-100">
+        <% @leads.each do |lead| %>
+          <tr class="hover:bg-gray-50 cursor-pointer" onclick="window.location='<%= admin_intake_lead_path(lead) %>'">
+            <td class="px-6 py-3 font-medium"><%= lead.full_name.presence || "—" %></td>
+            <td class="px-6 py-3 text-gray-600"><%= lead.age || "—" %></td>
+            <td class="px-6 py-3 text-gray-600"><%= lead.gender || "—" %></td>
+            <td class="px-6 py-3 text-gray-600"><%= [ lead.location_city, lead.location_country ].compact.join(", ").presence || "—" %></td>
+            <td class="px-6 py-3 text-gray-600"><%= lead.religiosity_level || "—" %></td>
+            <td class="px-6 py-3"><%= lead_status_badge(lead.status) %></td>
+            <td class="px-6 py-3 text-xs text-gray-400"><%= lead.created_at.strftime("%-b %-d") %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% else %>
+  <div class="bg-white rounded-xl border border-gray-200 p-12 text-center text-sm text-gray-400">
+    No leads yet. They'll appear here as soon as intakes complete on WhatsApp.
+  </div>
+<% end %>

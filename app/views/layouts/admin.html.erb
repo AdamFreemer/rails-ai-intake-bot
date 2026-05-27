@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Admin — AcmeBot</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+    <%= yield :head %>
+  </head>
+
+  <body class="bg-gray-50 text-gray-900 font-sans min-h-screen">
+    <%
+      intake_active   = admin_nav_active?(admin_intake_conversations_path)
+      leads_active    = admin_nav_active?(admin_intake_leads_path)
+      billing_active  = admin_nav_active?(admin_billing_index_path)
+      emails_active   = admin_nav_active?(admin_email_lists_path)
+      settings_active = admin_nav_active?(
+        edit_admin_intake_general_settings_path,
+        edit_admin_intake_shabbat_settings_path,
+        edit_admin_intake_chatbot_config_path
+      )
+    %>
+
+    <nav class="bg-white border-b border-gray-200 px-6 md:px-8 py-4 flex items-center justify-between">
+      <div class="flex items-baseline gap-6">
+        <a href="<%= admin_intake_conversations_path %>" class="font-serif text-xl text-gray-900 no-underline">Acme<span class="text-pk">Bot</span> Admin</a>
+      </div>
+
+      <div class="hidden md:flex items-center gap-6 text-sm">
+        <a href="<%= admin_intake_conversations_path %>" class="<%= admin_nav_link_class(intake_active) %>">Conversations</a>
+        <a href="<%= admin_intake_leads_path %>" class="<%= admin_nav_link_class(leads_active) %>">Leads</a>
+        <a href="<%= admin_billing_index_path %>" class="<%= admin_nav_link_class(billing_active) %>">Billing</a>
+        <a href="<%= admin_email_lists_path %>" class="<%= admin_nav_link_class(emails_active) %>">Email Lists</a>
+
+        <details class="relative group" data-controller="dismissible-details" data-action="toggle->dismissible-details#enforceSingleOpen">
+          <summary class="cursor-pointer list-none flex items-center gap-1 select-none <%= admin_nav_link_class(settings_active) %>">
+            Settings
+            <svg class="w-3 h-3 transition-transform group-open:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </summary>
+          <div class="absolute right-0 mt-2 w-56 bg-white border border-gray-200 rounded-lg shadow-lg z-10 py-1">
+            <a href="<%= edit_admin_intake_general_settings_path %>" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 no-underline">General</a>
+            <a href="<%= edit_admin_intake_shabbat_settings_path %>" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 no-underline">Shabbat Settings</a>
+            <% if current_user.super_admin? %>
+              <a href="<%= edit_admin_intake_chatbot_config_path %>" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 no-underline">Chatbot Configuration <span class="text-[0.6rem] text-pk ml-1">SUPER</span></a>
+            <% end %>
+          </div>
+        </details>
+
+        <details class="relative group" data-controller="dismissible-details" data-action="toggle->dismissible-details#enforceSingleOpen">
+          <summary class="cursor-pointer list-none flex items-center gap-2 text-gray-500 hover:text-gray-900 select-none">
+            <span class="w-7 h-7 rounded-full bg-pk/10 flex items-center justify-center flex-shrink-0">
+              <svg class="w-4 h-4 text-pk" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+              </svg>
+            </span>
+            <span class="text-gray-400 truncate max-w-[180px] inline-block align-middle" title="<%= current_user.email %>"><%= current_user.email %></span>
+            <svg class="w-3 h-3 transition-transform group-open:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </summary>
+          <div class="absolute right-0 mt-2 w-56 bg-white border border-gray-200 rounded-lg shadow-lg z-10 py-1">
+            <a href="<%= edit_admin_user_settings_path %>" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 no-underline">User Settings</a>
+            <div class="border-t border-gray-100 my-1"></div>
+            <%= link_to "Log out", destroy_user_session_path, data: { turbo_method: :delete }, class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 no-underline" %>
+          </div>
+        </details>
+      </div>
+    </nav>
+
+    <% if notice.present? %>
+      <div class="max-w-6xl mx-auto mt-4 px-8">
+        <div class="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg text-sm"><%= notice %></div>
+      </div>
+    <% end %>
+    <% if alert.present? %>
+      <div class="max-w-6xl mx-auto mt-4 px-8">
+        <div class="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg text-sm"><%= alert %></div>
+      </div>
+    <% end %>
+
+    <main class="max-w-[1400px] mx-auto py-8 px-6 md:px-8">
+      <%= yield %>
+    </main>
+  </body>
+</html>

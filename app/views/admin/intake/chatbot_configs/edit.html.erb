@@ -1,0 +1,64 @@
+<h1 class="text-2xl font-medium mb-2">Chatbot config</h1>
+<p class="text-sm text-gray-500 mb-6">Brand identity, prompt overrides, and auto-reply text. Saved values are interpolated into the next AI conversation.</p>
+
+<%= form_with model: @config, url: admin_intake_chatbot_config_path, method: :patch, scope: :config, local: true, class: "bg-white rounded-xl border border-gray-200 p-6 max-w-3xl space-y-5" do |f| %>
+  <div class="grid grid-cols-2 gap-4">
+    <div>
+      <label class="text-[0.65rem] uppercase tracking-wider text-gray-500">Brand name</label>
+      <%= f.text_field :brand_name, class: "w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 text-sm" %>
+    </div>
+    <div>
+      <label class="text-[0.65rem] uppercase tracking-wider text-gray-500">Bot name</label>
+      <%= f.text_field :bot_name, class: "w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 text-sm" %>
+    </div>
+  </div>
+
+  <div>
+    <label class="text-[0.65rem] uppercase tracking-wider text-gray-500">Brand tagline</label>
+    <%= f.text_field :brand_tagline, class: "w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 text-sm" %>
+  </div>
+
+  <div class="border-t border-gray-100 pt-5 space-y-4">
+    <div>
+      <label class="text-[0.65rem] uppercase tracking-wider text-gray-500">Welcome message</label>
+      <%= f.text_area :welcome_message, class: "w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 text-sm", rows: 3 %>
+    </div>
+    <div>
+      <label class="text-[0.65rem] uppercase tracking-wider text-gray-500">Completion message</label>
+      <%= f.text_area :completion_message, class: "w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 text-sm", rows: 3 %>
+    </div>
+    <div>
+      <label class="text-[0.65rem] uppercase tracking-wider text-gray-500">Custom system-prompt additions</label>
+      <%= f.text_area :custom_system_prompt_additions, class: "w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 text-sm", rows: 3, placeholder: "Extra instructions appended to the system prompt (e.g. 'mention the June 15 mixer')" %>
+    </div>
+  </div>
+
+  <div class="border-t border-gray-100 pt-5 space-y-4">
+    <h2 class="text-[0.65rem] uppercase tracking-wider text-gray-500 font-medium">Auto-replies</h2>
+    <div>
+      <label class="text-xs text-gray-600">Paused</label>
+      <%= f.text_area :paused_reply, class: "w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 text-sm", rows: 2 %>
+    </div>
+    <div>
+      <label class="text-xs text-gray-600">Shabbat</label>
+      <%= f.text_area :shabbat_reply, class: "w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 text-sm", rows: 2 %>
+    </div>
+    <div>
+      <label class="text-xs text-gray-600">Returning user</label>
+      <%= f.text_area :returning_user_reply, class: "w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 text-sm", rows: 2 %>
+    </div>
+    <div>
+      <label class="text-xs text-gray-600">Media received</label>
+      <%= f.text_area :media_received_reply, class: "w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 text-sm", rows: 2 %>
+    </div>
+    <div>
+      <label class="text-xs text-gray-600">Technical failure fallback</label>
+      <%= f.text_area :error_fallback_reply, class: "w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 text-sm", rows: 2 %>
+      <p class="text-[0.65rem] text-gray-500 mt-1">Sent when Anthropic, Twilio, or another upstream call fails. The user sees this instead of silence.</p>
+    </div>
+  </div>
+
+  <div class="flex items-center gap-3 pt-4 border-t border-gray-100">
+    <%= f.submit "Save chatbot config", class: "px-5 py-2 bg-pk text-white rounded-lg text-sm hover:bg-pk-dk transition-colors cursor-pointer border-none" %>
+  </div>
+<% end %>

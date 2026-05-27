@@ -1,0 +1,79 @@
+<div class="mb-8">
+  <h1 class="font-serif text-2xl">User Settings</h1>
+  <p class="text-sm text-gray-500 mt-1">Your personal account preferences — separate from the system-wide settings.</p>
+</div>
+
+<div class="bg-gradient-to-br from-pk/5 to-blue-50 border border-pk/20 rounded-xl p-6 mb-6 flex items-start gap-4">
+  <div class="w-10 h-10 rounded-full bg-pk/10 flex items-center justify-center flex-shrink-0">
+    <svg class="w-5 h-5 text-pk" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+      <circle cx="12" cy="7" r="4"/>
+    </svg>
+  </div>
+  <div>
+    <div class="text-[0.65rem] uppercase tracking-wider text-pk font-medium mb-1">Coming Soon</div>
+    <p class="text-sm text-gray-700">Personal preferences for <strong><%= current_user.email %></strong> — name, password, notifications, and (when there are more of you) team invitations.</p>
+  </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
+  <div class="bg-white border border-gray-200 rounded-xl p-6">
+    <div class="text-[0.65rem] uppercase tracking-wider text-gray-500 mb-4">Profile</div>
+    <div class="space-y-3 text-sm">
+      <div class="flex justify-between">
+        <span class="text-gray-500">Name</span>
+        <span class="text-gray-900"><%= current_user.full_name.presence || "—" %></span>
+      </div>
+      <div class="flex justify-between">
+        <span class="text-gray-500">Email</span>
+        <span class="text-gray-900"><%= current_user.email %></span>
+      </div>
+      <div class="flex justify-between">
+        <span class="text-gray-500">Role</span>
+        <span class="text-gray-900"><%= current_user.super_admin? ? "Super Admin" : "Admin" %></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-white border border-gray-200 rounded-xl p-6">
+    <div class="text-[0.65rem] uppercase tracking-wider text-gray-500 mb-4">Session</div>
+    <div class="space-y-3 text-sm">
+      <div class="flex justify-between">
+        <span class="text-gray-500">Signed in at</span>
+        <span class="text-gray-900"><%= current_user.current_sign_in_at&.strftime("%-b %-d, %-I:%M %p") || "—" %></span>
+      </div>
+      <div class="flex justify-between">
+        <span class="text-gray-500">Last sign-in</span>
+        <span class="text-gray-900"><%= current_user.last_sign_in_at&.strftime("%-b %-d, %-I:%M %p") || "—" %></span>
+      </div>
+      <div class="flex justify-between">
+        <span class="text-gray-500">Total sign-ins</span>
+        <span class="text-gray-900"><%= current_user.sign_in_count %></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="bg-white border border-gray-200 rounded-xl overflow-hidden">
+  <div class="px-6 py-4 border-b border-gray-200">
+    <h2 class="text-sm font-medium text-gray-900">Planned</h2>
+  </div>
+  <ul class="divide-y divide-gray-100 text-sm">
+    <li class="px-6 py-3 flex items-start gap-3">
+      <span class="text-pk">•</span>
+      <span><strong class="text-gray-900">Change password.</strong> Direct password reset without going through the email flow.</span>
+    </li>
+    <li class="px-6 py-3 flex items-start gap-3">
+      <span class="text-pk">•</span>
+      <span><strong class="text-gray-900">Notification preferences.</strong> Choose how you want to be alerted about new intakes, VIP prospects, or system events — email, SMS, or push.</span>
+    </li>
+    <li class="px-6 py-3 flex items-start gap-3">
+      <span class="text-pk">•</span>
+      <span><strong class="text-gray-900">Two-factor authentication.</strong> Optional second-factor for sign-in.</span>
+    </li>
+    <li class="px-6 py-3 flex items-start gap-3">
+      <span class="text-pk">•</span>
+      <span><strong class="text-gray-900">Team invitations.</strong> Invite additional admins (matchmaker assistants, bookkeeper, etc.) with their own roles.</span>
+    </li>
+  </ul>
+</div>

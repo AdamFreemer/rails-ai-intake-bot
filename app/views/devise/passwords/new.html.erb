@@ -1,0 +1,26 @@
+<section class="min-h-screen flex items-center justify-center px-8 bg-bg">
+  <div class="w-full max-w-md">
+    <div class="text-center mb-8">
+      <a href="/" class="font-serif text-2xl text-cream no-underline">Blind<span class="text-pk">Fate</span></a>
+      <h2 class="font-serif text-2xl font-normal mt-6 text-cream">Forgot your password?</h2>
+      <p class="text-sm text-muted mt-2">We'll send you reset instructions</p>
+    </div>
+
+    <div class="bg-bg2 border border-border rounded-2xl p-8">
+      <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }, class: "space-y-4") do |f| %>
+        <%= render "devise/shared/error_messages", resource: resource %>
+
+        <div class="flex flex-col">
+          <label class="text-xs uppercase tracking-widest text-muted mb-1">Email</label>
+          <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "bg-cream/5 border border-border rounded-lg px-4 py-3 text-cream font-sans text-sm outline-none focus:border-pk transition-colors" %>
+        </div>
+
+        <%= f.submit "Send reset instructions", class: "w-full py-3 bg-pk text-white border-none rounded-full font-sans text-sm cursor-pointer hover:bg-pk-dk transition-colors" %>
+      <% end %>
+
+      <div class="mt-6 text-center text-sm text-muted [&_a]:text-pk [&_a]:no-underline hover:[&_a]:underline">
+        <%= render "devise/shared/links" %>
+      </div>
+    </div>
+  </div>
+</section>

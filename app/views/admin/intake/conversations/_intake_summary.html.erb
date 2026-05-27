@@ -1,0 +1,45 @@
+<%# Rendered at the bottom of the conversation thread when intake is complete.
+    Pulls from conversation.extracted_data (the parsed structured block from the
+    AI), falling back to the linked lead's attributes. %>
+<% data    = conversation.extracted_data.to_h %>
+<% lead    = conversation.lead %>
+<% rows    = [
+     [ "Name",          data["FIRST_NAME"]       || lead&.first_name ],
+     [ "Age",           data["AGE"]              || lead&.age ],
+     [ "Gender",        data["GENDER"]           || lead&.gender ],
+     [ "Seeking",       data["SEEKING_GENDER"]   || lead&.seeking_gender ],
+     [ "Location",      [ data["LOCATION_CITY"] || lead&.location_city, data["LOCATION_COUNTRY"] || lead&.location_country ].compact_blank.join(", ").presence ],
+     [ "Religiosity",   data["RELIGIOSITY"]      || lead&.religiosity_level ],
+     [ "Services",      data["SERVICES"]         || lead&.preferences&.dig("services") ],
+     [ "Goal",          data["RELATIONSHIP_GOAL"] || lead&.relationship_goal ],
+     [ "About",         data["ABOUT"]            || lead&.about_me ],
+     [ "Looking for",   data["LOOKING_FOR"]      || lead&.what_looking_for ],
+     [ "Deal-breakers", data["DEAL_BREAKERS"]    || lead&.deal_breakers ],
+     [ "Source",        data["SOURCE"]           || lead&.source ]
+   ].reject { |_label, value| value.blank? } %>
+
+<% services_value = data["SERVICES"] || lead&.preferences&.dig("services") %>
+<div class="mt-6 border border-pk/30 rounded-lg overflow-hidden bg-pk/[0.02]">
+  <div class="px-4 py-2 bg-pk/10 border-b border-pk/20 flex items-center gap-2 flex-wrap">
+    <svg class="w-3.5 h-3.5 text-pk" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+    <span class="text-[0.65rem] uppercase tracking-wider text-pk font-semibold">Intake complete</span>
+    <% if services_priority_pill(services_value) %>
+      <%= services_priority_pill(services_value) %>
+    <% end %>
+    <span class="ml-auto text-[0.6rem] text-gray-500"><%= conversation.last_message_at&.strftime("%-b %-d, %-I:%M %p") %></span>
+  </div>
+  <dl class="divide-y divide-pk/10 text-xs">
+    <% rows.each do |label, value| %>
+      <div class="flex gap-3 px-4 py-1.5">
+        <dt class="w-28 flex-shrink-0 text-gray-500 uppercase tracking-wider text-[0.6rem] pt-0.5"><%= label %></dt>
+        <dd class="text-gray-800 flex-1"><%= value %></dd>
+      </div>
+    <% end %>
+  </dl>
+  <% if lead %>
+    <div class="px-4 py-2 border-t border-pk/10 bg-pk/[0.03]">
+      <%= link_to "Edit full lead →", edit_admin_intake_lead_path(lead),
+            class: "text-[0.7rem] text-pk hover:text-pk-dk no-underline font-medium" %>
+    </div>
+  <% end %>
+</div>

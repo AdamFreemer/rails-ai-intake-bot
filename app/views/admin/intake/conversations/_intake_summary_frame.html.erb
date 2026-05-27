@@ -1,0 +1,8 @@
+<%# Turbo Frame wrapper around the intake_summary card. Initially empty until
+    Intake::Conversation#after_update_commit broadcasts a replacement when
+    intake_complete flips true. %>
+<%= turbo_frame_tag "intake_summary_card_#{conversation.id}" do %>
+  <% if conversation.intake_complete? %>
+    <%= render "admin/intake/conversations/intake_summary", conversation: conversation %>
+  <% end %>
+<% end %>

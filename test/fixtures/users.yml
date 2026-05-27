@@ -1,0 +1,18 @@
+admin:
+  email: "admin@example.com"
+  encrypted_password: <%= Devise::Encryptor.digest(User, 'password123') %>
+  admin: true
+  sign_in_count: 0
+
+# Admin user who is NOT in SUPER_ADMIN_EMAILS — tests the super_admin gate
+regular_admin:
+  email: "manager@example.com"
+  encrypted_password: <%= Devise::Encryptor.digest(User, 'password123') %>
+  admin: true
+  sign_in_count: 0
+
+customer:
+  email: "user@example.com"
+  encrypted_password: <%= Devise::Encryptor.digest(User, 'password123') %>
+  admin: false
+  sign_in_count: 0

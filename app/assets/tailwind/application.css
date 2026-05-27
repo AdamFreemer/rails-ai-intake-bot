@@ -1,0 +1,12 @@
+@import "tailwindcss";
+
+/* AcmeBot design tokens */
+@theme {
+  --color-pk:     #c8366b;
+  --color-pk-dk:  #a82a59;
+  --color-bg:     #fbf4ee;
+  --color-bg2:    #f2e8de;
+  --color-cream:  #2d1f17;
+  --color-muted:  #7a6a5d;
+  --color-border: #d8c7b8;
+}

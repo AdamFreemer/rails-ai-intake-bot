@@ -1,0 +1,45 @@
+<div class="mb-6">
+  <%= link_to "← All Leads", admin_intake_leads_path, class: "text-sm text-gray-500 hover:text-gray-900 no-underline" %>
+</div>
+
+<div class="flex items-start justify-between mb-6">
+  <div>
+    <h1 class="text-2xl font-medium"><%= @lead.full_name.presence || "(unnamed lead)" %></h1>
+    <p class="text-xs text-gray-500 mt-1">
+      <%= lead_status_badge(@lead.status) %>
+      <span class="ml-2">Source: <%= @lead.source %></span>
+      <span class="ml-2 font-mono"><%= mask_phone(@lead.phone) %></span>
+    </p>
+  </div>
+  <%= link_to "Edit", edit_admin_intake_lead_path(@lead), class: "px-4 py-2 bg-pk text-white rounded-lg text-xs hover:bg-pk-dk transition-colors no-underline" %>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+  <div class="lg:col-span-2 bg-white rounded-xl border border-gray-200 p-6 space-y-3 text-sm">
+    <%= render partial: "field", locals: { label: "Age", value: @lead.age } %>
+    <%= render partial: "field", locals: { label: "Gender", value: @lead.gender } %>
+    <%= render partial: "field", locals: { label: "Seeking", value: @lead.seeking_gender } %>
+    <%= render partial: "field", locals: { label: "Location", value: [ @lead.location_city, @lead.location_country ].compact.join(", ") } %>
+    <%= render partial: "field", locals: { label: "Religiosity", value: @lead.religiosity_level } %>
+    <%= render partial: "field", locals: { label: "Services", value: @lead.preferences&.dig("services") } %>
+    <%= render partial: "field", locals: { label: "Relationship goal", value: @lead.relationship_goal } %>
+    <%= render partial: "field", locals: { label: "Occupation", value: @lead.occupation } %>
+    <%= render partial: "field", locals: { label: "About", value: @lead.about_me } %>
+    <%= render partial: "field", locals: { label: "Looking for", value: @lead.what_looking_for } %>
+    <%= render partial: "field", locals: { label: "Deal-breakers", value: @lead.deal_breakers } %>
+    <%= render partial: "field", locals: { label: "Email", value: @lead.email } %>
+  </div>
+
+  <aside class="space-y-4">
+    <div class="bg-white rounded-xl border border-gray-200 p-6">
+      <h2 class="text-[0.65rem] uppercase tracking-wider text-gray-500 font-medium mb-3">the team's notes</h2>
+      <p class="text-sm text-gray-700 whitespace-pre-line"><%= @lead.admin_notes.presence || "(none)" %></p>
+    </div>
+    <% if @lead.conversation %>
+      <div class="bg-white rounded-xl border border-gray-200 p-6">
+        <h2 class="text-[0.65rem] uppercase tracking-wider text-gray-500 font-medium mb-3">Conversation</h2>
+        <%= link_to "View intake transcript →", admin_intake_conversation_path(@lead.conversation), class: "text-pk hover:text-pk-dk no-underline text-sm" %>
+      </div>
+    <% end %>
+  </aside>
+</div>

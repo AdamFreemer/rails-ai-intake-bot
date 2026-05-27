@@ -1,0 +1,19 @@
+default:
+  brand_name: AcmeBot
+  brand_tagline: AI intake bot for service businesses
+  anthropic_model: claude-haiku-4-5-20251001
+  bot_name: AcmeBot Assistant
+  welcome_message: "Hi there! 💕 Welcome to AcmeBot."
+  completion_message: "Thank you so much for sharing! 💕"
+  paused_reply: "We're currently offline. Back soon!"
+  shabbat_reply: "Shabbat Shalom! 🕯️ We'll be back Saturday evening."
+  media_received_reply: "I work best with text — could you type that out?"
+  rate_limit_reply: "Whoa, slow down a sec! 😊"
+  intake_questions: []
+  service_info:
+    consultation_price: "$195"
+    database_size: "4,000+"
+    marriages_count: "Nearly 50"
+  max_messages_per_5_min: 20
+  abandon_timeout_hours: 24
+  send_followup_on_abandon: false

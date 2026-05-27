@@ -1,0 +1,55 @@
+<div class="mb-6">
+  <%= link_to "← Back to lead", admin_intake_lead_path(@lead), class: "text-sm text-gray-500 hover:text-gray-900 no-underline" %>
+</div>
+
+<h1 class="text-2xl font-medium mb-6">Edit lead</h1>
+
+<%= form_with model: @lead, url: admin_intake_lead_path(@lead), method: :patch, scope: :lead, local: true, class: "bg-white rounded-xl border border-gray-200 p-6 max-w-3xl space-y-4" do |f| %>
+  <div class="grid grid-cols-2 gap-4">
+    <%= render partial: "form_field", locals: { f: f, attr: :first_name, label: "First name" } %>
+    <%= render partial: "form_field", locals: { f: f, attr: :last_name, label: "Last name" } %>
+    <%= render partial: "form_field", locals: { f: f, attr: :email, label: "Email" } %>
+    <%= render partial: "form_field", locals: { f: f, attr: :phone, label: "Phone" } %>
+    <%= render partial: "form_field", locals: { f: f, attr: :age, label: "Age", type: :number } %>
+    <%= render partial: "form_field", locals: { f: f, attr: :gender, label: "Gender" } %>
+    <%= render partial: "form_field", locals: { f: f, attr: :seeking_gender, label: "Seeking gender" } %>
+    <%= render partial: "form_field", locals: { f: f, attr: :location_city, label: "City" } %>
+    <%= render partial: "form_field", locals: { f: f, attr: :location_country, label: "Country" } %>
+    <%= render partial: "form_field", locals: { f: f, attr: :religiosity_level, label: "Religiosity" } %>
+    <%= render partial: "form_field", locals: { f: f, attr: :relationship_goal, label: "Relationship goal" } %>
+    <%= render partial: "form_field", locals: { f: f, attr: :occupation, label: "Occupation" } %>
+  </div>
+
+  <div>
+    <label class="text-[0.65rem] uppercase tracking-wider text-gray-500">About</label>
+    <%= f.text_area :about_me, class: "w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 text-sm", rows: 3 %>
+  </div>
+  <div>
+    <label class="text-[0.65rem] uppercase tracking-wider text-gray-500">Looking for</label>
+    <%= f.text_area :what_looking_for, class: "w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 text-sm", rows: 3 %>
+  </div>
+  <div>
+    <label class="text-[0.65rem] uppercase tracking-wider text-gray-500">Deal-breakers</label>
+    <%= f.text_area :deal_breakers, class: "w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 text-sm", rows: 2 %>
+  </div>
+  <div>
+    <label class="text-[0.65rem] uppercase tracking-wider text-gray-500">the team's notes (private)</label>
+    <%= f.text_area :admin_notes, class: "w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 text-sm", rows: 4 %>
+  </div>
+
+  <div class="flex gap-4">
+    <div class="flex-1">
+      <label class="text-[0.65rem] uppercase tracking-wider text-gray-500">Status</label>
+      <%= f.select :status, Intake::Lead::STATUSES.map { |s| [ s.titleize, s ] }, {}, class: "w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 text-sm" %>
+    </div>
+    <div class="flex-1">
+      <label class="text-[0.65rem] uppercase tracking-wider text-gray-500">Source</label>
+      <%= f.select :source, Intake::Lead::SOURCES.map { |s| [ s.titleize, s ] }, {}, class: "w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 text-sm" %>
+    </div>
+  </div>
+
+  <div class="flex items-center gap-3 pt-4 border-t border-gray-100">
+    <%= f.submit "Save changes", class: "px-5 py-2 bg-pk text-white rounded-lg text-sm hover:bg-pk-dk transition-colors cursor-pointer border-none" %>
+    <%= link_to "Cancel", admin_intake_lead_path(@lead), class: "text-sm text-gray-500 hover:text-gray-700 no-underline" %>
+  </div>
+<% end %>

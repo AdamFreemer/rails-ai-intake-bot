@@ -1,0 +1,25 @@
+<h1 class="text-2xl font-medium mb-2">Shabbat Settings</h1>
+<p class="text-sm text-gray-500 mb-6">Automatically pause the chatbot from Friday afternoon through Saturday evening (local time).</p>
+
+<%= form_with model: @setting, url: admin_intake_shabbat_settings_path, method: :patch, scope: :setting, local: true, class: "bg-white rounded-xl border border-gray-200 p-6 max-w-2xl space-y-5" do |f| %>
+  <div>
+    <label class="flex items-center gap-2 text-sm">
+      <%= f.check_box :shabbat_mode_enabled %>
+      <span>Enable Shabbat auto-pause (Friday 4:00 PM → Saturday 9:00 PM local)</span>
+    </label>
+    <p class="text-xs text-gray-500 mt-1 ml-6">Uses fixed times for now. A future enhancement can switch to a zmanim API for precise sunset / nightfall by location.</p>
+  </div>
+
+  <div>
+    <label class="text-[0.65rem] uppercase tracking-wider text-gray-500">Timezone</label>
+    <%= f.select :shabbat_timezone,
+                 ActiveSupport::TimeZone.all.map { |tz| [ tz.to_s, tz.name ] },
+                 {},
+                 class: "w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 text-sm" %>
+    <p class="text-xs text-gray-500 mt-1">Used to decide when the Shabbat window starts and ends.</p>
+  </div>
+
+  <div class="flex items-center gap-3 pt-4 border-t border-gray-100">
+    <%= f.submit "Save Shabbat settings", class: "px-5 py-2 bg-pk text-white rounded-lg text-sm hover:bg-pk-dk transition-colors cursor-pointer border-none" %>
+  </div>
+<% end %>

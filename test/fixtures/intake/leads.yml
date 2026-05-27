@@ -1,0 +1,27 @@
+sarah:
+  first_name: Sarah
+  last_name: Cohen
+  email: sarah@example.com
+  phone: "+15555550100"
+  age: 28
+  gender: female
+  seeking_gender: male
+  location_city: Brooklyn
+  location_country: USA
+  religiosity_level: Modern Orthodox
+  relationship_goal: marriage
+  about_me: Software engineer who loves hiking
+  what_looking_for: Someone kind and ambitious
+  deal_breakers: Smoking
+  source: whatsapp
+  status: new
+
+reviewed:
+  first_name: Daniel
+  age: 32
+  gender: male
+  seeking_gender: female
+  location_city: Tel Aviv
+  location_country: Israel
+  source: whatsapp
+  status: reviewed

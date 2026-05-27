@@ -1,0 +1,39 @@
+<%= turbo_frame_tag "intake_sidebar_#{conversation.id}" do %>
+  <% lead     = conversation.lead %>
+  <% data     = conversation.extracted_data.to_h %>
+  <% services = lead&.preferences&.dig("services") || data["SERVICES"] %>
+
+  <aside class="bg-white rounded-xl border border-gray-200 p-6 text-sm">
+    <h2 class="text-[0.65rem] uppercase tracking-wider text-gray-500 font-medium mb-4">Extracted lead</h2>
+
+    <% if lead %>
+      <div class="space-y-2">
+        <p>
+          <strong><%= lead.full_name.presence || lead.first_name.presence || "(no name)" %></strong>
+        </p>
+        <% if services_priority_pill(services) %>
+          <p><%= services_priority_pill(services) %></p>
+        <% end %>
+        <p class="text-gray-600">Age: <%= lead.age || "—" %></p>
+        <p class="text-gray-600">Gender: <%= lead.gender || "—" %> · Seeking: <%= lead.seeking_gender || "—" %></p>
+        <p class="text-gray-600">Location: <%= [ lead.location_city, lead.location_country ].compact_blank.join(", ").presence || "—" %></p>
+        <p class="text-gray-600">Religiosity: <%= lead.religiosity_level || "—" %></p>
+        <p class="text-gray-600">Services: <%= services || "—" %></p>
+        <p class="text-gray-600">Goal: <%= lead.relationship_goal || "—" %></p>
+        <p class="text-gray-600 mt-3">About: <%= lead.about_me.presence || "—" %></p>
+        <p class="text-gray-600">Looking for: <%= lead.what_looking_for.presence || "—" %></p>
+        <p class="text-gray-600">Deal-breakers: <%= lead.deal_breakers.presence || "—" %></p>
+      </div>
+      <%= link_to "View / edit lead →", admin_intake_lead_path(lead),
+                  class: "block mt-4 text-pk hover:text-pk-dk no-underline text-xs" %>
+    <% elsif data.any? %>
+      <ul class="space-y-1 text-gray-700">
+        <% data.each do |k, v| %>
+          <li><strong class="text-xs text-gray-500"><%= k %>:</strong> <%= v %></li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p class="text-gray-400 italic">Lead will appear here once the intake is complete.</p>
+    <% end %>
+  </aside>
+<% end %>
