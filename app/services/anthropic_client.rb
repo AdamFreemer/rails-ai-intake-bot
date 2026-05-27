@@ -9,8 +9,9 @@ class AnthropicClient
   end
 
   def initialize
-    api_key = Rails.application.credentials.dig(:anthropic, :api_key)
-    raise "Missing Rails.application.credentials.anthropic.api_key" if api_key.blank?
+    api_key = ENV["ANTHROPIC_API_KEY"].presence ||
+              Rails.application.credentials.dig(:anthropic, :api_key)
+    raise "Missing ANTHROPIC_API_KEY env var or Rails.application.credentials.anthropic.api_key" if api_key.blank?
     @client = Anthropic::Client.new(api_key: api_key)
   end
 

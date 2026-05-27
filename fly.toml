@@ -1,0 +1,41 @@
+# fly.toml — Fly.io deployment config
+# App name and primary region are set during `fly launch`; defaults below.
+#
+# Two processes:
+#   app    — Rails web server (Thruster + Puma)
+#   worker — Solid Queue worker (bin/jobs start)
+#
+# Both run on shared-cpu-1x / 256MB machines (~$2-3/mo each at always-on).
+
+app = "rails-ai-intake-bot"
+primary_region = "ord"
+console_command = "/rails/bin/rails console"
+
+[build]
+
+[deploy]
+  release_command = "./bin/rails db:prepare"
+
+[processes]
+  app    = "./bin/thrust ./bin/rails server"
+  worker = "bundle exec bin/jobs start"
+
+[http_service]
+  internal_port = 80
+  force_https = true
+  auto_stop_machines = "stop"
+  auto_start_machines = true
+  min_machines_running = 1     # keeps the webhook responsive (no cold start delay for Twilio)
+  processes = ["app"]
+
+[[vm]]
+  memory = "512mb"
+  cpu_kind = "shared"
+  cpus = 1
+  processes = ["app"]
+
+[[vm]]
+  memory = "512mb"
+  cpu_kind = "shared"
+  cpus = 1
+  processes = ["worker"]

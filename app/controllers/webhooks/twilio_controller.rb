@@ -26,7 +26,8 @@ module Webhooks
     def verify_twilio_signature
       return if Rails.env.test? && request.headers["X-Skip-Twilio-Validation"] == "true"
 
-      auth_token = Rails.application.credentials.dig(:twilio, :auth_token)
+      auth_token = ENV["TWILIO_AUTH_TOKEN"].presence ||
+                   Rails.application.credentials.dig(:twilio, :auth_token)
       return head :forbidden if auth_token.blank?
 
       validator = Twilio::Security::RequestValidator.new(auth_token)

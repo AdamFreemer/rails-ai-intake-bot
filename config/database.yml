@@ -85,20 +85,8 @@ test:
 # for a full overview on how database connection configuration can be specified.
 #
 production:
-  primary: &primary_production
-    <<: *default
-    database: rails_ai_intake_bot_production
-    username: rails_ai_intake_bot
-    password: <%= ENV["RAILS_AI_INTAKE_BOT_DATABASE_PASSWORD"] %>
-  cache:
-    <<: *primary_production
-    database: rails_ai_intake_bot_production_cache
-    migrations_paths: db/cache_migrate
-  queue:
-    <<: *primary_production
-    database: rails_ai_intake_bot_production_queue
-    migrations_paths: db/queue_migrate
-  cable:
-    <<: *primary_production
-    database: rails_ai_intake_bot_production_cable
-    migrations_paths: db/cable_migrate
+  <<: *default
+  # Fly Postgres sets DATABASE_URL automatically when you attach a Postgres
+  # cluster. Single-DB setup keeps things simple for a single-server demo;
+  # Solid Queue, Solid Cable, and any caches all share this one database.
+  url: <%= ENV["DATABASE_URL"] %>

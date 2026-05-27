@@ -4,11 +4,16 @@ class WhatsappSender
   end
 
   def initialize
-    creds = Rails.application.credentials.twilio
-    raise "Missing Rails.application.credentials.twilio" if creds.blank?
-    @from = creds[:whatsapp_number]
-    raise "Missing twilio.whatsapp_number credential" if @from.blank?
-    @client = Twilio::REST::Client.new(creds[:account_sid], creds[:auth_token])
+    creds = Rails.application.credentials.twilio || {}
+    @from = ENV["TWILIO_WHATSAPP_NUMBER"].presence || creds[:whatsapp_number]
+    sid   = ENV["TWILIO_ACCOUNT_SID"].presence    || creds[:account_sid]
+    token = ENV["TWILIO_AUTH_TOKEN"].presence     || creds[:auth_token]
+
+    raise "Missing TWILIO_WHATSAPP_NUMBER" if @from.blank?
+    raise "Missing TWILIO_ACCOUNT_SID"    if sid.blank?
+    raise "Missing TWILIO_AUTH_TOKEN"     if token.blank?
+
+    @client = Twilio::REST::Client.new(sid, token)
   end
 
   def send_message(to:, body:)

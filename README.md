@@ -190,6 +190,40 @@ bin/rubocop             # Omakase style
 The test suite stubs Anthropic + Twilio via WebMock — no live API calls
 ever fire from tests.
 
+## Deploy to Fly.io ($5–20/mo)
+
+The repo ships a `fly.toml` configured for two `shared-cpu-1x / 512MB`
+machines (web + worker), `min_machines_running = 1` on the web side so
+Twilio webhooks never hit a cold start.
+
+```sh
+# One-time setup
+brew install flyctl
+fly auth login
+fly launch --copy-config --no-deploy   # creates the app, attaches Postgres
+fly secrets set \
+  RAILS_MASTER_KEY="$(cat config/master.key)" \
+  ANTHROPIC_API_KEY="sk-ant-..." \
+  TWILIO_ACCOUNT_SID="AC..." \
+  TWILIO_AUTH_TOKEN="..." \
+  TWILIO_WHATSAPP_NUMBER="whatsapp:+14155238886"
+
+fly deploy
+```
+
+The `release_command` (`./bin/rails db:prepare`) runs migrations on every
+deploy.
+
+Optional — seed demo data so the admin pages look populated for visitors:
+
+```sh
+fly ssh console -C "env ALLOW_DEMO_SEED=true bin/rails runner db/seeds/dev_demo.rb"
+```
+
+Expected costs: ~$5/mo idle (two tiny Fly machines + Fly Postgres dev
+plan), peak ~$20/mo with light Twilio + Anthropic usage assuming spend
+caps are set on both providers.
+
 ## Connecting WhatsApp
 
 1. Create a Twilio account → Messaging → Try It Out → **Send a WhatsApp
